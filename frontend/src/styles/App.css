@@ -42,21 +42,34 @@ body {
 
 input,
 button {
-  border: none;
+  border: 1px solid transparent;
   border-radius: 12px;
   padding: 12px 14px;
   font-size: 1rem;
 }
 
+input:focus-visible {
+  outline: none;
+  border-color: #6ea8ff;
+  box-shadow: 0 0 0 2px rgba(110, 168, 255, 0.25);
+}
+
 button {
   cursor: pointer;
   font-weight: 700;
+  transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 .auth-form button,
 .logout {
   background: #9d4edd;
   color: #fff;
+}
+
+.auth-form button:hover:not(:disabled),
+.logout:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 .dashboard-header {
@@ -96,10 +109,30 @@ button {
 }
 
 .feedback,
-.error {
+.error,
+.success {
   margin-top: 12px;
 }
 
 .error {
   color: #ffb3c6;
+}
+
+.success {
+  color: #9ef0b0;
+}
+
+.auth-links {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.auth-link {
+  color: #e7d4ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
 }
