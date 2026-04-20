@@ -85,7 +85,6 @@ export default function Register() {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            minLength={6}
             required
           />
 
@@ -95,7 +94,6 @@ export default function Register() {
             type="password"
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
-            minLength={6}
             required
           />
 
