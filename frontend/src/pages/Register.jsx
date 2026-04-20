@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const REDIRECT_DELAY_MS = 900;
+const REDIRECT_DELAY_MILLISECONDS = 900;
 
 export default function Register() {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function Register() {
       }
 
       setSuccess('Conta criada com sucesso! Redirecionando para o login...');
-      setTimeout(() => navigate('/', { replace: true }), REDIRECT_DELAY_MS);
+      setTimeout(() => navigate('/', { replace: true }), REDIRECT_DELAY_MILLISECONDS);
     } catch (err) {
       setError(err.message);
     } finally {
