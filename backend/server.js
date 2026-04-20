@@ -4,21 +4,50 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
+const crypto = require('crypto');
+const rateLimit = require('express-rate-limit');
 
 dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
-const jwtSecret = process.env.JWT_SECRET || 'development_secret';
+const jwtSecret =
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV === 'production' ? '' : crypto.randomBytes(32).toString('hex'));
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '24h';
 const esp32BaseUrl = process.env.ESP32_BASE_URL || '';
 const esp32Token = process.env.ESP32_TOKEN || '';
 
-const corsOrigin = process.env.CORS_ORIGIN || '*';
-app.use(cors({ origin: corsOrigin === '*' ? true : corsOrigin }));
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET é obrigatório em produção.');
+}
+
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Origem não permitida por CORS.'));
+    },
+  })
+);
 app.use(express.json());
 
 const users = [];
+const turnOnRateLimitMap = new Map();
+const turnOnRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas tentativas. Aguarde 1 minuto.' },
+});
 
 function createToken(user) {
   return jwt.sign({ id: user.id, email: user.email }, jwtSecret, { expiresIn: jwtExpiresIn });
@@ -38,6 +67,27 @@ function authMiddleware(req, res, next) {
   } catch (_error) {
     return res.status(401).json({ error: 'Token inválido.' });
   }
+}
+
+function inMemoryTurnOnRateLimiter(req, res, next) {
+  const key = req.ip || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const windowMs = 60 * 1000;
+  const limit = 5;
+
+  const current = turnOnRateLimitMap.get(key);
+  if (!current || now - current.windowStart > windowMs) {
+    turnOnRateLimitMap.set(key, { windowStart: now, count: 1 });
+    return next();
+  }
+
+  if (current.count >= limit) {
+    return res.status(429).json({ error: 'Muitas tentativas. Aguarde 1 minuto.' });
+  }
+
+  current.count += 1;
+  turnOnRateLimitMap.set(key, current);
+  return next();
 }
 
 app.get('/api/health', (_req, res) => {
@@ -106,7 +156,7 @@ app.get('/api/status', async (_req, res) => {
   }
 });
 
-app.post('/api/turn-on', authMiddleware, async (_req, res) => {
+app.post('/api/turn-on', turnOnRateLimiter, inMemoryTurnOnRateLimiter, authMiddleware, async (_req, res) => {
   if (!esp32BaseUrl || !esp32Token) {
     return res.status(503).json({ error: 'Configuração do ESP32 incompleta.' });
   }

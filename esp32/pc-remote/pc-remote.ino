@@ -1,6 +1,6 @@
 #include <WiFi.h>
 #include <WebServer.h>
-#include "../config.h"
+#include "config.h"
 
 const int RELAY_PIN = 5;
 const int LED_PIN = 2;
