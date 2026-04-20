@@ -1,19 +1,19 @@
-# DuckDNS Setup Instructions
+# Configurar DuckDNS
 
-## Step 1: Create a DuckDNS Account
-1. Go to [DuckDNS](https://www.duckdns.org) e clique em 'Sign up'.
-2. Você pode se registrar usando sua conta GitHub, Reddit ou Twitter.
-3. Após se registrar, você estará logado em sua conta DuckDNS.
+1. Acesse `https://www.duckdns.org` e faça login.
+2. Crie um subdomínio (ex: `meupc.duckdns.org`).
+3. Copie seu token da conta DuckDNS.
+4. No roteador, configure redirecionamento da porta 80 para o IP local do ESP32.
+5. Configure atualização de IP dinâmico no roteador ou em um cliente DuckDNS.
+6. No backend, use:
 
-## Step 2: Criar seu domínio
-1. Em sua conta DuckDNS, insira um nome de domínio no campo "add domain".
-2. Clique em 'add domain'. Seu domínio será `seunomedomain.duckdns.org`.
-3. Copie o TOKEN que aparece para sua conta.
+```env
+ESP32_BASE_URL=http://meupc.duckdns.org
+ESP32_TOKEN=seu_token_compartilhado
+```
 
-## Step 3: Configurar no ESP32
-Edite a variável `duckdns_token` no arquivo `config.h` do ESP32:
+Teste:
 
-```cpp
-const char* duckdns_token = "seu_token_aqui";
-const char* duckdns_domain = "seunomedomain.duckdns.org";
+```bash
+curl "http://meupc.duckdns.org/health"
 ```

@@ -1,20 +1,29 @@
-# Setup Instructions
+# Setup inicial
 
-Follow these step-by-step instructions to set up the project:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/lucaolokao/pc-remote-starter.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd pc-remote-starter
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Configure the environment variables as needed.
-5. Run the application:
-   ```bash
-   npm start
-   ```
+## 1) Backend
+
+```bash
+cd backend
+cp .env.example .env
+npm install
+npm start
+```
+
+API em `http://localhost:3000`.
+
+## 2) Frontend
+
+```bash
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+App em `http://localhost:5173`.
+
+## 3) Fluxo inicial
+
+1. Registre usuário em `POST /api/register`.
+2. Faça login em `POST /api/login`.
+3. No dashboard, use o botão para ligar o PC.

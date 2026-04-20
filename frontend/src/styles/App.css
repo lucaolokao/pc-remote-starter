@@ -1,0 +1,105 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: #f7f3ff;
+  background: #120a23;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #3a1c71, #7a1cac, #9d4edd);
+}
+
+.auth-page,
+.dashboard-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.auth-card,
+.status-card {
+  width: min(420px, 100%);
+  background: rgba(15, 9, 30, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(8px);
+}
+
+.auth-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+input,
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1rem;
+}
+
+button {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.auth-form button,
+.logout {
+  background: #9d4edd;
+  color: #fff;
+}
+
+.dashboard-header {
+  width: min(480px, 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.status-card {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.status.online {
+  color: #58d68d;
+}
+
+.status.offline {
+  color: #ff7675;
+}
+
+.power-button {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #c77dff, #7b2cbf);
+  color: #fff;
+  font-size: 1.4rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.power-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.feedback,
+.error {
+  margin-top: 12px;
+}
+
+.error {
+  color: #ffb3c6;
+}
